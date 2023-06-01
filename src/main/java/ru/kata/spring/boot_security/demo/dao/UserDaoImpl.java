@@ -13,16 +13,9 @@ public class UserDaoImpl implements UserDao{
 
     @PersistenceContext
     private EntityManager entityManager;
-    private final RolesDao rolesDao;
-
-    public UserDaoImpl(RolesDao rolesDao) {
-        this.rolesDao = rolesDao;
-    }
-
 
     @Override
     public void addUser(User user, String[] role) {
-        user.setRoles(rolesDao.getRoles(role));
         entityManager.persist(user);
     }
 
@@ -45,14 +38,11 @@ public class UserDaoImpl implements UserDao{
 
     @Override
     public void updateUser(User user, String[] roles) {
-        user.setRoles(rolesDao.getRoles(roles));
-        user.setPassword(user.getPassword());
         entityManager.merge(user);
     }
 
     @Override
     public void deleteUser(int id) {
-
         entityManager.createQuery("delete from User where id = :id").setParameter("id", id).executeUpdate();
     }
 }
